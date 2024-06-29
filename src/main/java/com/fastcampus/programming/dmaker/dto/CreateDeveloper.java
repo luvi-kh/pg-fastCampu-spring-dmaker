@@ -1,7 +1,6 @@
 package com.fastcampus.programming.dmaker.dto;
 
 import com.fastcampus.programming.dmaker.entity.Developer;
-import com.fastcampus.programming.dmaker.exception.DMakerErrorCode;
 import com.fastcampus.programming.dmaker.type.DeveloperLevel;
 import com.fastcampus.programming.dmaker.type.DeveloperSkillType;
 import jakarta.validation.constraints.Max;
@@ -48,9 +47,6 @@ public class CreateDeveloper {
         private DeveloperSkillType developerSkillType;
         private Integer experienceYears;
         private String memberId;
-
-        private DMakerErrorCode errorCode;
-        private String errorMessage;
 
         public static  Response fromEntity(Developer developer){
             return Response.builder()
