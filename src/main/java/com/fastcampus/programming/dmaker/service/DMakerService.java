@@ -14,6 +14,7 @@ import com.fastcampus.programming.dmaker.type.DeveloperLevel;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +27,8 @@ import static com.fastcampus.programming.dmaker.exception.DMakerErrorCode.*;
 @Service
 @RequiredArgsConstructor
 public class DMakerService {
+    @Value("#{developer.level.min.senior}")
+    private final Integer minSeniorYears;
     private final DeveloperRepository developerRepository;
     private final RetiredDeveloperRepository retiredDeveloperRepository;
 
