@@ -48,7 +48,7 @@ public class CreateDeveloper {
         private Integer experienceYears;
         private String memberId;
 
-        public static  Response fromEntity(Developer developer){
+        public static  Response fromEntity(@NonNull Developer developer){
             return Response.builder()
                     .developerLevel(developer.getDeveloperLevel())
                     .developerSkillType(developer.getDeveloperSkillType())

@@ -4,10 +4,8 @@ import com.fastcampus.programming.dmaker.code.StatusCode;
 import com.fastcampus.programming.dmaker.dto.CreateDeveloper;
 import com.fastcampus.programming.dmaker.dto.DeveloperDetailDto;
 import com.fastcampus.programming.dmaker.entity.Developer;
-import com.fastcampus.programming.dmaker.exception.DMakerErrorCode;
 import com.fastcampus.programming.dmaker.exception.DMakerException;
 import com.fastcampus.programming.dmaker.repository.DeveloperRepository;
-import com.fastcampus.programming.dmaker.repository.RetiredDeveloperRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -20,7 +18,9 @@ import java.util.Optional;
 import static com.fastcampus.programming.dmaker.exception.DMakerErrorCode.DUPLICATED_MEMBER_ID;
 import static com.fastcampus.programming.dmaker.type.DeveloperLevel.SENIOR;
 import static com.fastcampus.programming.dmaker.type.DeveloperSkillType.FRONT_END;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -31,9 +31,6 @@ class DMakerServiceTest {
 
     @Mock
     private DeveloperRepository developerRepository;
-
-    @Mock
-    private RetiredDeveloperRepository retiredDeveloperRepository;
 
     @InjectMocks
     private DMakerService dMakerService;
@@ -76,10 +73,12 @@ class DMakerServiceTest {
         //given
         given(developerRepository.findByMemberId(anyString()))
                 .willReturn(Optional.empty());
+        given(developerRepository.save(any()))
+                .willReturn(defaultDeveloper);
         ArgumentCaptor<Developer> captor = ArgumentCaptor.forClass(Developer.class);
 
         //when
-        CreateDeveloper.Response developer = dMakerService.createDeveloper(defaultCreateRequest);
+        dMakerService.createDeveloper(defaultCreateRequest);
 
         //then
         verify(developerRepository, times(1))
@@ -95,7 +94,6 @@ class DMakerServiceTest {
         //given
         given(developerRepository.findByMemberId(anyString()))
                 .willReturn(Optional.of(defaultDeveloper));
-        ArgumentCaptor<Developer> captor = ArgumentCaptor.forClass(Developer.class);
 
         //when
         //then
@@ -104,12 +102,6 @@ class DMakerServiceTest {
         );
         assertEquals(DUPLICATED_MEMBER_ID, dMakerException.getDMakerErrorCode());
 
-//        verify(developerRepository, times(1))
-//                .save(captor.capture());
-//        Developer savedDeveloper = captor.getValue();
-//        assertEquals(SENIOR, savedDeveloper.getDeveloperLevel());
-//        assertEquals(FRONT_END, savedDeveloper.getDeveloperSkillType());
-//        assertEquals(12, savedDeveloper.getExperienceYears());
     }
 
 }
